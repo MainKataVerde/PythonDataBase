@@ -49,13 +49,18 @@ def agregar_producto():
     nombre = input("Nombre del cóctel: ")
     cantidad = int(input("Cantidad: "))
     precio = float(input("Precio: "))
-    if buscar_producto(nombre):
-        print("El cóctel ya existe")
+    if nombre == None or cantidad == None or precio == None:
+        print("Por favor, rellene todos los campos")
     else:
-        nuevo_producto = {"nombre": nombre, "cantidad": cantidad, "precio": precio}
-        cocteles.append(nuevo_producto)
+        if cantidad < 0 or precio < 0:
+            print("Por favor, introduzca un valor válido")
+        else :
+            if buscar_producto(nombre):
+                print("El cóctel ya existe")
+            else:
+                nuevo_producto = {"nombre": nombre, "cantidad": cantidad, "precio": precio}
+                cocteles.append(nuevo_producto)
         print(f"El cóctel '{nombre}' ha sido agregado\n")
-
 def buscar_producto(producto):
     encontrado=False
     i=0
