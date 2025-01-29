@@ -74,6 +74,13 @@ def actualizar_producto(nombre_producto):
                         coctel['cantidad'] = nueva_cantidad
                         print("¡Cantidad actualizada!")
                         break
+            case 2:
+                nuevo_precio = float(input("Introduce el nuevo precio: "))
+                for coctel in cocteles:
+                    if coctel['nombre'] == nombre_producto:
+                        coctel['precio'] = nuevo_precio
+                        print("¡Precio actualizado!")
+                        break
     else :
         print("No se encontró el producto")
 
