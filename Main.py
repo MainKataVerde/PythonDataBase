@@ -49,40 +49,55 @@ def agregar_producto():
     nombre = input("Nombre del cóctel: ")
     cantidad = int(input("Cantidad: "))
     precio = float(input("Precio: "))
-    nuevo_producto = {"nombre": nombre, "cantidad": cantidad, "precio": precio}
-    cocteles.append(nuevo_producto)
-    print(f"El cóctel '{nombre}' ha sido agregado\n")
+    if buscar_producto(nombre):
+        print("El cóctel ya existe")
+    else:
+        nuevo_producto = {"nombre": nombre, "cantidad": cantidad, "precio": precio}
+        cocteles.append(nuevo_producto)
+        print(f"El cóctel '{nombre}' ha sido agregado\n")
 
 def buscar_producto(producto):
-    for coctel in cocteles:
-        if coctel['nombre'] == producto:
-            ancho_nombre = len(coctel['nombre'])
-            print(f"{coctel['nombre']:<{ancho_nombre}} | {coctel['cantidad']:^10} | {coctel['precio']:^10}€ ")
-            return True
+    encontrado=False
+    i=0
+    while i<len(cocteles) and not encontrado:
+        if cocteles[i]['nombre'] == producto:
+            ancho_nombre = len(cocteles[i]['nombre'])
+            print(f"{cocteles[i]['nombre']:<{ancho_nombre}} | {cocteles[i]['cantidad']:^10} | {cocteles[i]['precio']:^10}€ ")
+            encontrado= True
+        i+=1
     
-    print("Lo sentimos, no tenemos ese coctel :(")
-    return False
+    if not encontrado:
+        print("Lo sentimos, no tenemos ese coctel :(")
+
+    return encontrado
 
 def actualizar_producto(nombre_producto):
+    encontrado=False
     if buscar_producto(nombre_producto) :
         eleccion = int(input("¿Qué deseas actualizar?\n1. Cantidad\n2. Precio\nElige : "))
         match eleccion:
             case 1:
                 nueva_cantidad = int(input("Introduce la nueva cantidad: "))
-                for coctel in cocteles:
-                    if coctel['nombre'] == nombre_producto:
-                        coctel['cantidad'] = nueva_cantidad
+                i=0
+                while i<len(cocteles) and not encontrado:
+                    if cocteles[i]['nombre'] == nombre_producto:
+                        cocteles[i]['cantidad'] = nueva_cantidad
                         print("¡Cantidad actualizada!")
-                        break
+                        encontrado= True
+                    i+=1
             case 2:
                 nuevo_precio = float(input("Introduce el nuevo precio: "))
-                for coctel in cocteles:
-                    if coctel['nombre'] == nombre_producto:
-                        coctel['precio'] = nuevo_precio
-                        print("¡Precio actualizado!")
-                        break
+                encontrado=False
+                i=0
+                while i<len(cocteles) and not encontrado:
+                    if cocteles[i]['nombre'] == nombre_producto:
+                        cocteles[i]['precio'] = nuevo_precio
+                        print("¡Precio actualizada!")
+                        encontrado= True
+                    i+=1
+        return encontrado
     else :
-        print("No se encontró el producto")
+        return encontrado
 
     
 def menu():
@@ -113,8 +128,10 @@ def funcionalidades():
                     print("Actualizar producto")
                     imprimir_inventario()
                     nombre_producto = input("Seleccione producto a actualizar: ")
-                    actualizar_producto(nombre_producto)
-                    buscar_producto(nombre_producto)
+                    if actualizar_producto(nombre_producto):
+                        buscar_producto(nombre_producto)
+                    else:
+                        print("No se encontró el producto")
                     opcion = int(input("Seleccione acción: "))
                 case _:
                     print("Opción no válida. Intente nuevamente.")
