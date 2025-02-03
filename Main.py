@@ -76,6 +76,36 @@ def buscar_producto(producto):
 
     return encontrado
 
+#Consultar productos con cantidad inferior a un umbral especificado.
+def buscar_producto_cantidad(cantidad_menor):
+    for coctel in cocteles:
+        if int (coctel ['cantidad']) <= cantidad_menor:
+          print(f"{coctel['nombre']:<{ancho_nombre}} | {coctel['cantidad']:^10} | {coctel['precio']:^10}€ ")
+
+
+def estadisticas():
+    total=0
+    total_precio=0
+    caro=cocteles[0]
+    barato = cocteles[0]
+    for coctel in cocteles:
+        total += int(coctel['cantidad'])
+        total_precio += int(coctel['precio']) * int(coctel['cantidad'])
+
+        if coctel['precio'] >caro['precio'] :
+            caro=coctel
+
+        if coctel['precio'] <barato['precio']:
+            barato = coctel
+    
+    print("\n=== ESTADÍSTICAS DEL INVENTARIO ===")
+    print(f"Cantidad total de cocteles en inventario: {total} unidades")
+    print(f"Valor total del inventario: {total_precio:,}€")
+    print("\n--- Análisis de Precios ---")
+    print(f"Coctel más caro: {caro['nombre']} ({caro['precio']:,}€)")
+    print(f"Coctel más barato: {barato['nombre']} ({barato['precio']:,}€)")
+    print("================================")
+    
 def actualizar_producto(nombre_producto):
     encontrado=False
     if buscar_producto(nombre_producto) :
@@ -110,13 +140,15 @@ def menu():
     print("1. Mostrar Inventario")
     print("2. Añadir al Inventario")
     print("3. Buscar producto")
-    print("4. Actualizar producto")
-    print("5. Salir")
+    print("4. Buscar producto por cantidad")
+    print("5. Eliminar producto")
+    print("6. Estadistica")
+    print("7. Salir")
 
 def funcionalidades():
     menu() 
     opcion = int(input("Seleccione acción: "))
-    while opcion != 5:
+    while opcion != 7:
             match opcion:
                 case 1:
                     imprimir_inventario()
@@ -130,13 +162,16 @@ def funcionalidades():
                     buscar_producto(producto)
                     opcion = int(input("Seleccione acción: "))
                 case 4:
-                    print("Actualizar producto")
+                    cantidad =int(input("Introduce cantidad por la que quieres filtrar: ")) 
+                    buscar_producto_cantidad(cantidad)
+                    opcion = int(input("Seleccione acción: "))
+                case 5:
+                    producto = input("Introduce producto que quieres buscar: ")
+                    buscar_producto(producto)
                     imprimir_inventario()
-                    nombre_producto = input("Seleccione producto a actualizar: ")
-                    if actualizar_producto(nombre_producto):
-                        buscar_producto(nombre_producto)
-                    else:
-                        print("No se encontró el producto")
+                    opcion = int(input("Seleccione acción: "))
+                case 6:
+                    estadisticas()
                     opcion = int(input("Seleccione acción: "))
                 case _:
                     print("Opción no válida. Intente nuevamente.")
